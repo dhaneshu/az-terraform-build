@@ -1,5 +1,5 @@
 resource "azurerm_key_vault" "kv" {
-  name                        = module.vars.keyvault_inputs.kv_name
+  name                        = var.keyvault_inputs.kv_name
   location                    = azurerm_resource_group.rg["uksouth"].location
   resource_group_name         = azurerm_resource_group.rg["uksouth"].name
   enabled_for_disk_encryption = true
@@ -8,7 +8,7 @@ resource "azurerm_key_vault" "kv" {
   purge_protection_enabled    = false
 
   sku_name = "standard"
-  tags     = module.vars.tags
+  tags     = var.tags
 }
 
 resource "azurerm_key_vault_access_policy" "kv" {

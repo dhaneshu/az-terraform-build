@@ -1,5 +1,5 @@
 resource "random_password" "sql" {
-  for_each         = module.vars.database_inputs
+  for_each         = var.database_inputs
   length           = 32
   special          = true
   override_special = "_%@"
@@ -8,7 +8,7 @@ resource "random_password" "sql" {
 
 
 resource "azurerm_key_vault_secret" "db" {
-  for_each     = module.vars.database_inputs
+  for_each     = var.database_inputs
   name         = "sql-admin-password-${each.key}"
   value        = random_password.sql[each.key].result
   content_type = "User Name - sqladmin"
@@ -17,7 +17,7 @@ resource "azurerm_key_vault_secret" "db" {
 
 
 resource "azurerm_mysql_server" "db" {
-  for_each            = module.vars.database_inputs
+  for_each            = var.database_inputs
   name                = each.value.mysql_server_name
   location            = azurerm_resource_group.rg[each.key].location
   resource_group_name = azurerm_resource_group.rg[each.key].name
@@ -37,13 +37,12 @@ resource "azurerm_mysql_server" "db" {
   ssl_enforcement_enabled           = each.value.ssl_enforcement_enabled
   ssl_minimal_tls_version_enforced  = each.value.ssl_minimal_tls_version_enforced
 
-  tags       = module.vars.tags
+  tags       = var.tags
   depends_on = [azurerm_key_vault_access_policy.kv]
-
 }
 
 resource "azurerm_mysql_database" "db" {
-  for_each            = module.vars.database_inputs
+  for_each            = var.database_inputs
   name                = each.value.DB_Name
   resource_group_name = azurerm_resource_group.rg[each.key].name
   server_name         = azurerm_mysql_server.db[each.key].name

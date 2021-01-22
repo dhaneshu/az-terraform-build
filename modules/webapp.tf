@@ -1,6 +1,6 @@
 
 resource "azurerm_app_service_plan" "app_plan" {
-  for_each            = module.vars.webapp_service_plan_inputs
+  for_each            = var.webapp_service_plan_inputs
   name                = each.value.service_plan_name
   location            = azurerm_resource_group.rg[each.key].location
   resource_group_name = azurerm_resource_group.rg[each.key].name
@@ -10,11 +10,11 @@ resource "azurerm_app_service_plan" "app_plan" {
     tier = each.value.service_plan_tier
     size = each.value.service_plan_size
   }
-  tags = module.vars.tags
+  tags = var.tags
 }
 
 resource "azurerm_app_service" "webapp" {
-  for_each            = module.vars.webapp_inputs
+  for_each            = var.webapp_inputs
   name                = each.value.name
   location            = azurerm_resource_group.rg[each.key].location
   resource_group_name = azurerm_resource_group.rg[each.key].name
@@ -43,6 +43,6 @@ resource "azurerm_app_service" "webapp" {
   identity {
     type = "SystemAssigned"
   }
-  tags       = module.vars.tags
+  tags       = var.tags
   depends_on = [azurerm_key_vault_access_policy.kv]
 }
