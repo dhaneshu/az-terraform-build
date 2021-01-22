@@ -1,6 +1,6 @@
 provider "azurerm" {
-  subscription_id = "<Subscription_ID>" # Enter Subscription ID
-  tenant_id       = "<Tenant ID>"       # Enter Tenant ID
+  subscription_id = <Subscription_ID>" # Enter Subscription ID
+  tenant_id       = "<Tenant ID>" # Enter Tenant ID
   features {}
 }
 

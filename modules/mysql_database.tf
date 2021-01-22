@@ -37,7 +37,9 @@ resource "azurerm_mysql_server" "db" {
   ssl_enforcement_enabled           = each.value.ssl_enforcement_enabled
   ssl_minimal_tls_version_enforced  = each.value.ssl_minimal_tls_version_enforced
 
-  tags = module.vars.tags
+  tags       = module.vars.tags
+  depends_on = [azurerm_key_vault_access_policy.kv]
+
 }
 
 resource "azurerm_mysql_database" "db" {

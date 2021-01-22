@@ -43,5 +43,6 @@ resource "azurerm_app_service" "webapp" {
   identity {
     type = "SystemAssigned"
   }
-  tags = module.vars.tags
+  tags       = module.vars.tags
+  depends_on = [azurerm_key_vault_access_policy.kv]
 }
