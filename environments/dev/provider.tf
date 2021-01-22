@@ -1,8 +1,8 @@
-provider "azurerm" {
-  subscription_id = <Subscription_ID>" # Enter Subscription ID
-  tenant_id       = "<Tenant ID>" # Enter Tenant ID
-  features {}
-}
+#provider "azurerm" {
+#  subscription_id = <Subscription_ID>" # Enter Subscription ID
+#  tenant_id       = "<Tenant ID>" # Enter Tenant ID
+#  features {}
+#}
 
 # terraform {
 #   backend "azurerm" {
