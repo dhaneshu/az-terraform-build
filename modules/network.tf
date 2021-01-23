@@ -36,6 +36,23 @@ resource "azurerm_subnet" "endpointsubnet" {
   enforce_private_link_endpoint_network_policies = true
 }
 
+resource "azurerm_subnet" "appgatewaysubnet" {
+  # lookup(var.network_inputs, "appgatewaysubnet_name", null)
+  for_each             = lookup(var.network_inputs, "appgatewaysubnet_name", null) != null ? var.network_inputs : {}
+  name                 = each.value.appgatewaysubnet_name
+  resource_group_name  = azurerm_resource_group.rg[each.key].name
+  virtual_network_name = azurerm_virtual_network.vnet[each.key].name
+  address_prefixes     = each.value.appgatewaysubnet_address_prefixes
+}
+
+resource "azurerm_subnet" "frontdoorsubnet" {
+  for_each             = lookup(var.network_inputs, "frontdoorsubnet_name", null) != null ? var.network_inputs : {}
+  name                 = each.value.frontdoorsubnet_name
+  resource_group_name  = azurerm_resource_group.rg[each.key].name
+  virtual_network_name = azurerm_virtual_network.vnet[each.key].name
+  address_prefixes     = each.value.frontdoorsubnet_address_prefixes
+}
+
 resource "azurerm_app_service_virtual_network_swift_connection" "vnetintegrationconnection" {
   for_each       = var.network_inputs
   app_service_id = azurerm_app_service.webapp[each.key].id
@@ -43,8 +60,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "vnetintegration
 }
 
 resource "azurerm_private_dns_zone" "dnsprivatezone" {
+  for_each            = var.network_inputs
   name                = "privatelink.azurewebsites.net"
-  resource_group_name = azurerm_resource_group.rg["uksouth"].name
+  resource_group_name = azurerm_resource_group.rg[each.key].name
   tags                = var.tags
 }
 
@@ -52,9 +70,10 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dnszonelink" {
   for_each              = var.network_inputs
   name                  = "dnszonelink-${each.key}"
   resource_group_name   = azurerm_resource_group.rg[each.key].name
-  private_dns_zone_name = azurerm_private_dns_zone.dnsprivatezone.name
+  private_dns_zone_name = azurerm_private_dns_zone.dnsprivatezone[each.key].name
   virtual_network_id    = azurerm_virtual_network.vnet[each.key].id
   tags                  = var.tags
+  depends_on            = [azurerm_private_dns_zone.dnsprivatezone]
 }
 
 resource "azurerm_private_endpoint" "privateendpoint" {
@@ -66,7 +85,7 @@ resource "azurerm_private_endpoint" "privateendpoint" {
 
   private_dns_zone_group {
     name                 = "privatednszonegroup${each.key}"
-    private_dns_zone_ids = [azurerm_private_dns_zone.dnsprivatezone.id]
+    private_dns_zone_ids = [azurerm_private_dns_zone.dnsprivatezone[each.key].id]
   }
 
   private_service_connection {
@@ -75,4 +94,6 @@ resource "azurerm_private_endpoint" "privateendpoint" {
     subresource_names              = ["sites"]
     is_manual_connection           = false
   }
+  tags       = var.tags
+  depends_on = [azurerm_app_service.webapp]
 }

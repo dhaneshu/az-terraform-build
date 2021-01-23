@@ -1,4 +1,10 @@
-tags = {}
+tags = {
+  "costcentre"  = "shared"
+  "email"       = "azure_platform_team@sainsburys.co.uk"
+  "environment" = "dev"
+  "live"        = "no"
+  "servicename" = "AzureLandingZone"
+}
 
 keyvault_inputs = {
   kv_name = "kv-dev-keyvault-webapp"
@@ -74,7 +80,7 @@ network_inputs = {
   uksouth = {
     vnet_name                             = "vnet-dev-uks"
     vnet_address_space                    = ["10.0.0.0/16"]
-    integrationsubnet_name                = "integrationsubnet"
+    integrationsubnet_name                = "integrationsubnet-uks"
     integrationsubnet_address_prefixes    = ["10.0.1.0/24"]
     endpointsubnetsubnet_name             = "endpointsubnet"
     endpointsubnetsubnet_address_prefixes = ["10.0.2.0/24"]
@@ -82,7 +88,7 @@ network_inputs = {
   ukwest = {
     vnet_name                             = "vnet-dev-ukw"
     vnet_address_space                    = ["10.0.0.0/16"]
-    integrationsubnet_name                = "integrationsubnet"
+    integrationsubnet_name                = "integrationsubnet-ukw"
     integrationsubnet_address_prefixes    = ["10.0.1.0/24"]
     endpointsubnetsubnet_name             = "endpointsubnet"
     endpointsubnetsubnet_address_prefixes = ["10.0.2.0/24"]
@@ -95,15 +101,15 @@ webapp_service_plan_inputs = {
     service_plan_name     = "my-appserviceplan-uks"
     service_plan_kind     = "Linux"
     service_plan_reserved = true
-    service_plan_tier     = "Standard"
-    service_plan_size     = "S1"
+    service_plan_tier     = "PremiumV2"
+    service_plan_size     = "P1v2"
   }
   ukwest = {
     service_plan_name     = "my-appserviceplan-ukw"
     service_plan_kind     = "Linux"
     service_plan_reserved = true
-    service_plan_tier     = "Standard"
-    service_plan_size     = "S1"
+    service_plan_tier     = "PremiumV2"
+    service_plan_size     = "P1v2"
   }
 }
 
@@ -113,6 +119,6 @@ webapp_inputs = {
     name = "webapp-dev-uks"
   }
   ukwest = {
-    name = "webapp-dev-uks"
+    name = "webapp-dev-ukw"
   }
 }

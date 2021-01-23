@@ -13,6 +13,7 @@ resource "azurerm_key_vault_secret" "db" {
   value        = random_password.sql[each.key].result
   content_type = "User Name - sqladmin"
   key_vault_id = azurerm_key_vault.kv.id
+  depends_on   = [azurerm_key_vault_access_policy.kv]
 }
 
 

@@ -25,7 +25,7 @@ resource "azurerm_app_service" "webapp" {
 
   connection_string {
     name  = "Database"
-    type  = "MySQL"
+    type  = "MySql"
     value = "Database=${azurerm_mysql_database.db[each.key].name};Data Source=${random_password.sql[each.key].result}"
   }
   storage_account {
