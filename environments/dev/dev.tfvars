@@ -1,10 +1,4 @@
-tags = {
-  "costcentre"  = "shared"
-  "email"       = "azure_platform_team@sainsburys.co.uk"
-  "environment" = "dev"
-  "live"        = "no"
-  "servicename" = "AzureLandingZone"
-}
+tags = {}
 
 keyvault_inputs = {
   kv_name = "kv-dev-keyvault-webapp"
@@ -82,16 +76,25 @@ network_inputs = {
     vnet_address_space                    = ["10.0.0.0/16"]
     integrationsubnet_name                = "integrationsubnet-uks"
     integrationsubnet_address_prefixes    = ["10.0.1.0/24"]
-    endpointsubnetsubnet_name             = "endpointsubnet"
+    endpointsubnetsubnet_name             = "endpointsubnet-uks"
     endpointsubnetsubnet_address_prefixes = ["10.0.2.0/24"]
+    appgatewaysubnet_name                 = "appgatewaysubnet-uks"
+    appgatewaysubnet_address_prefixes     = ["10.0.3.0/24"]
+    frontdoorsubnet_name                  = "frontdoorsubnet-uks"
+    frontdoorsubnet_address_prefixes      = ["10.0.4.0/24"]
+
   }
   ukwest = {
     vnet_name                             = "vnet-dev-ukw"
-    vnet_address_space                    = ["10.0.0.0/16"]
+    vnet_address_space                    = ["10.1.0.0/16"]
     integrationsubnet_name                = "integrationsubnet-ukw"
-    integrationsubnet_address_prefixes    = ["10.0.1.0/24"]
-    endpointsubnetsubnet_name             = "endpointsubnet"
-    endpointsubnetsubnet_address_prefixes = ["10.0.2.0/24"]
+    integrationsubnet_address_prefixes    = ["10.1.1.0/24"]
+    endpointsubnetsubnet_name             = "endpointsubnet-ukw"
+    endpointsubnetsubnet_address_prefixes = ["10.1.2.0/24"]
+    appgatewaysubnet_name                 = "appgatewaysubnet-ukw"
+    appgatewaysubnet_address_prefixes     = ["10.1.3.0/24"]
+    frontdoorsubnet_name                  = "frontdoorsubnet-ukw"
+    frontdoorsubnet_address_prefixes      = ["10.1.4.0/24"]
   }
 }
 
@@ -121,4 +124,119 @@ webapp_inputs = {
   ukwest = {
     name = "webapp-dev-ukw"
   }
+}
+
+app_gateway_inputs = {
+  uksouth = {
+    appgw_name           = "app-gateway-uks"
+    ip_allocation_method = "Dynamic"
+    ip_sku               = "Basic"
+    sku = {
+      name     = "Standard_Small"
+      tier     = "Standard"
+      capacity = 2
+    }
+    frontend_ports = [
+      "443",
+      "80"
+    ]
+    http_listeners = [
+      {
+        name     = "listener1"
+        protocol = "http"
+        port     = "80"
+      }
+      # {
+      #   name     = "listener2"
+      #   protocol = "https"
+      #   port     = "443"
+      # }
+    ]
+    request_routing_rules = [
+      {
+        name         = "route1"
+        rule_type    = "Basic"
+        listenername = "listener1"
+    }]
+    authentication_certificate_configs = [
+      # {
+      #   name = ""
+      #   data = ""
+      # }
+    ]
+    ssl_certificates_configs = [
+      # {
+      #   name     = ""
+      #   data     = ""
+      #   password = ""
+      # }
+    ]
+  }
+  ukwest = {
+    appgw_name           = "app-gateway-ukw"
+    ip_allocation_method = "Dynamic"
+    ip_sku               = "Basic"
+    sku = {
+      name     = "Standard_Small"
+      tier     = "Standard"
+      capacity = 2
+    }
+    frontend_ports = [
+      "443",
+      "80"
+    ]
+    http_listeners = [
+      {
+        name     = "listener1"
+        protocol = "http"
+        port     = "80"
+      }
+      # {
+      #   name     = "listener2"
+      #   protocol = "https"
+      #   port     = "443"
+      # }
+    ]
+    request_routing_rules = [
+      {
+        name         = "route1"
+        rule_type    = "Basic"
+        listenername = "listener1"
+      }
+    ]
+    authentication_certificate_configs = [
+      # {
+      #   name = ""
+      #   data = ""
+      # }
+    ]
+    ssl_certificates_configs = [
+      # {
+      #   name     = ""
+      #   data     = ""
+      #   password = ""
+      # }
+    ]
+  }
+}
+
+frontdoor_inputs = {
+  name                                         = "myfrontdoor1"
+  enforce_backend_pools_certificate_name_check = false
+  backend_pool_name                            = "Backendweb"
+  routing_rule = {
+    accepted_protocols  = ["Http", "Https"]
+    forwarding_protocol = "MatchRequest"
+    patterns_to_match   = ["/*"]
+  }
+  backend_pool = {
+    host_header = "www.mytestwebbackend.com"
+    address     = "www.mytestwebbackend.com"
+    http_port   = 80
+    https_port  = 443
+  }
+  load_balancing_name                                 = "LoadBalancingSettings1"
+  health_probe_name                                   = "HealthProbeSetting1"
+  frontend_endpoint_host_name                         = "example-FrontDoor.azurefd.net"
+  frontend_endpoint_custom_https_provisioning_enabled = false
 }

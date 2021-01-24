@@ -1,7 +1,6 @@
 output "app_service_plan_id" {
   description = "Id of the App Service Plan"
-  #   value       = app_plan
-  value = module.build_infra.app_service_plan_id
+  value       = module.build_infra.app_service_plan_id
 }
 
 
@@ -9,8 +8,6 @@ output "app_service_id" {
   description = "Id of the App Service"
   value       = module.build_infra.app_service_id
 }
-
-
 
 output "app_service_default_site_hostname" {
   description = "The Default Hostname associated with the App Service"
@@ -38,10 +35,6 @@ output "webapp_integrationsubnet_ids" {
   value       = module.build_infra.webapp_integrationsubnet_ids
 }
 
-output "frontdoorsubnet_ids" {
-  description = "WebApp Integration subnet IDs"
-  value       = module.build_infra.frontdoorsubnet_ids
-}
 output "appgatewaysubnet_ids" {
   description = "WebApp Integration subnet IDs"
   value       = module.build_infra.appgatewaysubnet_ids

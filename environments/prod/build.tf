@@ -9,4 +9,6 @@ module "build_infra" {
   network_inputs             = var.network_inputs
   webapp_service_plan_inputs = var.webapp_service_plan_inputs
   webapp_inputs              = var.webapp_inputs
+  app_gateway_inputs         = var.app_gateway_inputs
+  frontdoor_inputs           = var.frontdoor_inputs
 }

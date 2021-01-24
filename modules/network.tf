@@ -38,7 +38,8 @@ resource "azurerm_subnet" "endpointsubnet" {
 
 resource "azurerm_subnet" "appgatewaysubnet" {
   # lookup(var.network_inputs, "appgatewaysubnet_name", null)
-  for_each             = lookup(var.network_inputs, "appgatewaysubnet_name", null) != null ? var.network_inputs : {}
+  # for_each             = lookup(var.network_inputs, "appgatewaysubnet_name", null) != null ? var.network_inputs : {}
+  for_each             = var.network_inputs
   name                 = each.value.appgatewaysubnet_name
   resource_group_name  = azurerm_resource_group.rg[each.key].name
   virtual_network_name = azurerm_virtual_network.vnet[each.key].name
@@ -46,7 +47,8 @@ resource "azurerm_subnet" "appgatewaysubnet" {
 }
 
 resource "azurerm_subnet" "frontdoorsubnet" {
-  for_each             = lookup(var.network_inputs, "frontdoorsubnet_name", null) != null ? var.network_inputs : {}
+  # for_each             = lookup(var.network_inputs, "frontdoorsubnet_name", null) != null ? var.network_inputs : {}
+  for_each             = var.network_inputs
   name                 = each.value.frontdoorsubnet_name
   resource_group_name  = azurerm_resource_group.rg[each.key].name
   virtual_network_name = azurerm_virtual_network.vnet[each.key].name

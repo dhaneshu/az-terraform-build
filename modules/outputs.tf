@@ -8,6 +8,14 @@ output "app_service_plan_id" {
   }
 }
 
+output "app_service" {
+  description = "App Service"
+  value = {
+    for instance in azurerm_app_service.webapp :
+    instance.name => instance
+  }
+}
+
 output "app_service_id" {
   description = "Id of the App Service"
   value = {
