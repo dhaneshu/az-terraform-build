@@ -14,7 +14,7 @@ resource "azurerm_application_gateway" "app_gateway" {
   depends_on          = [azurerm_public_ip.pip]
   name                = each.value.appgw_name
   resource_group_name = azurerm_resource_group.rg[each.key].name
-  location            = "azurerm_resource_group.rg[each.key].location"
+  location            = azurerm_resource_group.rg[each.key].location
 
   sku {
     name     = lookup(each.value.sku, "name")
